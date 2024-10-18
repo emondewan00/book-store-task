@@ -15,7 +15,11 @@ const App = () => {
   });
 
   useEffect(() => {
+    const query = JSON.parse(localStorage.getItem("query"));
     const wishlistItems = JSON.parse(localStorage.getItem("wishlistItems"));
+    if (query) {
+      setSearchText(query);
+    }
     if (wishlistItems) {
       setWishlistIds(wishlistItems);
     }
@@ -38,7 +42,7 @@ const App = () => {
     const ids = localStorage.getItem("wishlistItems");
     if (!ids) {
       localStorage.setItem("wishlistItems", JSON.stringify([id]));
-      setWishlistIds(ids);
+      setWishlistIds([id]);
     } else {
       const currentIds = JSON.parse(ids);
       const index = currentIds.indexOf(id);
@@ -52,14 +56,14 @@ const App = () => {
     }
   };
 
+  const onQueryChange = (query) => {
+    setSearchText(query);
+    localStorage.setItem("query", JSON.stringify(query));
+  };
+
   return (
     <div>
       <div className="bg-flight-banner-image bg-no-repeat bg-cover object-fill h-56 flex items-center justify-center">
-        {/* <img src="./flight-banner-image.jpg" alt="" /> */}
-        {/* <div className="flex items-center justify-center h-full">
-        <h1 className="text-4xl font-bold text-white">Welcome to Zepto</h1>
-      </div> */}
-
         <div className="mt-40">
           <h2 className="text-2xl font-bold mb-2 text-white">
             Search for Books
@@ -82,7 +86,7 @@ const App = () => {
                 id="search"
                 placeholder="Type your search words"
                 className="border border-gray-200 rounded w-full p-2 focus:outline-none"
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => onQueryChange(e.target.value)}
               />
             </div>
 
