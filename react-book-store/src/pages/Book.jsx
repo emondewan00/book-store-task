@@ -1,36 +1,68 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import calculateAge from "../../utils/calculateAge";
+import BookDetailsSkeleton from "../components/book/BookDetailsSkeleton";
 
 const BookDetails = () => {
-  const wishlistIds = [10, 15];
-
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [status, setStatus] = useState("loading");
   const [book, setBook] = useState({});
   const { bookId } = useParams();
 
   useEffect(() => {
+    const wishlistIds = JSON.parse(localStorage.getItem("wishlistItems"));
+    if (wishlistIds) {
+      setIsWishlisted(wishlistIds.includes(parseInt(bookId)));
+    }
+  }, [bookId]);
+
+  useEffect(() => {
     const getBook = async () => {
       try {
+        setStatus("loading");
         const response = await fetch(`https://gutendex.com/books/${bookId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setBook(data);
-        console.log(data);
+        setStatus("loaded");
       } catch (error) {
         console.error(
           "There has been a problem with your fetch operation:",
           error
         );
+        setStatus("error");
       }
     };
     getBook();
   }, [bookId]);
 
+  if (status === "loading") {
+    return <BookDetailsSkeleton />;
+  }
+
+  const toggleWishlist = (id) => {
+    const ids = localStorage.getItem("wishlistItems");
+    if (!ids) {
+      localStorage.setItem("wishlistItems", JSON.stringify([id]));
+      setIsWishlisted(true);
+    } else {
+      const currentIds = JSON.parse(ids);
+      const index = currentIds.indexOf(id);
+      if (index === -1) {
+        currentIds.push(id);
+        setIsWishlisted(true);
+      } else {
+        currentIds.splice(index, 1);
+        setIsWishlisted(false);
+      }
+      localStorage.setItem("wishlistItems", JSON.stringify(currentIds));
+    }
+  };
+
   return (
     <div className="max-w-5xl mt-10 mx-auto pb-10 px-4">
-      {" "}
       {/* Add padding on smaller screens */}
       <div className="shadow-md bg-white p-6">
         {/* Header Section */}
@@ -67,15 +99,16 @@ const BookDetails = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-y-2 sm:gap-x-4 items-start sm:items-center mt-4">
               <button
+                onClick={() => toggleWishlist(book.id)}
                 className={`flex items-center justify-center gap-1 rounded-md py-2 px-5 transition-all ${
-                  wishlistIds.includes(book?.id)
+                  isWishlisted
                     ? "bg-[#DC2954]/[14%] text-[#DC2954] hover:bg-[#DC2954]/[24%]"
                     : "bg-[#1C4336]/[14%] text-[#1C4336] hover:bg-[#1C4336]/[24%]"
                 }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill={wishlistIds.includes(book?.id) ? "#DC2954" : "none"}
+                  fill={isWishlisted ? "#DC2954" : "none"}
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
@@ -87,9 +120,7 @@ const BookDetails = () => {
                     d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
                   />
                 </svg>
-                {wishlistIds.includes(book?.id)
-                  ? "In wishlist"
-                  : "Add to Wishlist"}
+                {isWishlisted ? "In wishlist" : "Add to Wishlist"}
               </button>
               <button className="bg-green-100 px-5 py-2 rounded">
                 Read Online
