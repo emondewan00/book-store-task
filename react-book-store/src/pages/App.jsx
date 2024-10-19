@@ -1,12 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const dropdownData = [
+  { label: "Science Fiction", value: "science-fiction" },
+  { label: "Children's Literature", value: "childrens-literature" },
+  { label: "Philosophy", value: "philosophy" },
+  { label: "Historical Fiction", value: "historical-fiction" },
+  { label: "Mystery", value: "mystery" },
+  { label: "Adventure", value: "adventure" },
+  { label: "Poetry", value: "poetry" },
+  { label: "Drama", value: "drama" },
+  { label: "Fantasy", value: "fantasy" },
+  { label: "Religion", value: "religion" },
+  { label: "Mythology", value: "mythology" },
+  { label: "Biography", value: "biography" },
+  { label: "Politics", value: "politics" },
+  { label: "Horror", value: "horror" },
+];
 const App = () => {
   const [url, setUrl] = useState("https://gutendex.com/books/?page=1");
   const [searchText, setSearchText] = useState("");
   const [wishlistIds, setWishlistIds] = useState([]);
   const [fetchStatus, setFetchStatus] = useState("idle");
-
+  const [filterValue, setFilterValue] = useState("");
   const [books, setBooks] = useState({
     count: 0,
     next: null,
@@ -17,12 +33,11 @@ const App = () => {
   useEffect(() => {
     const query = JSON.parse(localStorage.getItem("query"));
     const wishlistItems = JSON.parse(localStorage.getItem("wishlistItems"));
-    if (query) {
-      setSearchText(query);
-    }
-    if (wishlistItems) {
-      setWishlistIds(wishlistItems);
-    }
+    const valueFilter = JSON.parse(localStorage.getItem("filterValue"));
+
+    if (query) setSearchText(query);
+    if (wishlistItems) setWishlistIds(wishlistItems);
+    if (valueFilter) setFilterValue(valueFilter);
   }, []);
 
   useEffect(() => {
@@ -30,9 +45,11 @@ const App = () => {
       setFetchStatus("loading");
       let u = url;
       if (searchText) {
-        u = `${url}&search=${searchText}`;
+        u += `&search=${searchText}`;
       }
-
+      if (filterValue) {
+        u += `&topic=${filterValue}`;
+      }
       try {
         const response = await fetch(u);
         const data = await response.json();
@@ -44,7 +61,7 @@ const App = () => {
       }
     };
     getBooks();
-  }, [url, searchText]);
+  }, [url, searchText, filterValue]);
 
   const toggleWishlist = (id) => {
     const ids = localStorage.getItem("wishlistItems");
@@ -67,6 +84,13 @@ const App = () => {
   const onQueryChange = (query) => {
     setSearchText(query);
     localStorage.setItem("query", JSON.stringify(query));
+  };
+
+  const onFilterChange = (e) => {
+    const value = e.target.value;
+    localStorage.removeItem("filterValue");
+    setFilterValue(value);
+    localStorage.setItem("filterValue", JSON.stringify(value));
   };
 
   return (
@@ -108,12 +132,15 @@ const App = () => {
                 className="cursor-pointer rounded-md border px-4 py-2 text-center text-gray-600"
                 name="filterBy"
                 id="filterBy"
+                value={filterValue}
+                onChange={onFilterChange}
               >
-                <option value="">Sort</option>
-                <option value="name_asc">Name (A-Z)</option>
-                <option value="name_desc">Name (Z-A)</option>
-                <option value="year_asc">Publication Year (Oldest)</option>
-                <option value="year_desc">Publication Year (Newest)</option>
+                <option value="">Select a genre</option>
+                {dropdownData.map((data, i) => (
+                  <option value={data.value} key={i}>
+                    {data.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
