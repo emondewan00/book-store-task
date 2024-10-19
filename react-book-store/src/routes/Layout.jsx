@@ -3,10 +3,10 @@ import NavBar from "../components/common/NavBar";
 
 const Layout = () => {
   return (
-    <>
+    <div className="bg-gray-50">
       <NavBar />
       <Outlet />
-    </>
+    </div>
   );
 };
 

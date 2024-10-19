@@ -19,7 +19,7 @@ const languages = {
   ur: "Urdu",
 };
 
-const skeleton = [0, 1, 2, 3];
+const skeleton = [0, 1, 2];
 
 const Wishlist = () => {
   const [url, setUrl] = useState("https://gutendex.com/books/");
@@ -84,7 +84,7 @@ const Wishlist = () => {
         <div className="w-full max-w-5xl mx-auto mt-10">
           <table>
             <thead className="w-full">
-              <tr className="hidden md:table-row border-b pb-2">
+              <tr className="hidden md:table-row border-b *:pb-3">
                 <th className="text-start">Book</th>
                 <th className="text-start w-1/6">Author</th>
                 <th className="text-start w-1/6">Languages</th>
@@ -139,14 +139,14 @@ const Wishlist = () => {
             <>
               <table>
                 <thead className="w-full">
-                  <tr className="hidden md:table-row border-b pb-2">
+                  <tr className="hidden md:table-row border-b *:pb-3">
                     <th className="text-start">Book</th>
                     <th className="text-start w-1/6">Author</th>
                     <th className="text-start w-1/6">Languages</th>
                     <th className="text-start w-1/6">Action</th>
                   </tr>
                 </thead>
-                <tbody className=" md:border-b">
+                <tbody className=" md:border-b ">
                   {books.results.map((book) => (
                     <tr
                       key={book.id}

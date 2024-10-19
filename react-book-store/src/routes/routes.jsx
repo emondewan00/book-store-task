@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../pages/App";
 import Layout from "./Layout";
 import Wishlist from "../pages/Wishlist";
+import Book from "../pages/Book";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
       {
         path: "/wishlist",
         element: <Wishlist />,
+      },
+      {
+        path: "/book/:bookId",
+        element: <Book />,
       },
     ],
   },
