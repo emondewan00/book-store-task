@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "flight-banner-image": "url('./flight-banner-image.jpg')",
+        "flight-banner-image": "url('./library.jpg')",
       },
-      colors:{
-        primary:"#1C4336"
-      }
+      colors: {
+        primary: "#1C4336",
+      },
     },
   },
   plugins: [],

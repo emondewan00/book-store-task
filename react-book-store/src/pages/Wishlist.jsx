@@ -73,29 +73,30 @@ const Wishlist = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <div className="bg-gray-100 h-40 flex items-center justify-center">
         <h1 className="text-2xl font-bold text-center text-gray-800">
           Wishlist
         </h1>
       </div>
 
+
       {status === "loading" && (
-        <div className="w-full max-w-5xl mx-auto mt-10">
-          <table>
-            <thead className="w-full">
-              <tr className="hidden md:table-row border-b *:pb-3">
+        <div className="w-full max-w-5xl mx-auto mt-10 px-4">
+          <table className="w-full">
+            <thead className="hidden md:table-header-group">
+              <tr className="border-b *:pb-2">
                 <th className="text-start">Book</th>
                 <th className="text-start w-1/6">Author</th>
                 <th className="text-start w-1/6">Languages</th>
                 <th className="text-start w-1/6">Action</th>
               </tr>
             </thead>
-            <tbody className=" md:border-b">
+            <tbody>
               {skeleton.map((i) => (
                 <tr
                   key={i}
-                  className="flex flex-col items-center justify-center border p-4 m-4 md:!border-x-0 md:p-0 md:m-0 md:table-row animate-pulse"
+                  className="flex flex-col items-center justify-center border p-4 md:!border-x-0 md:p-0 md:m-0 md:table-row animate-pulse"
                 >
                   <td className="md:grid grid-cols-3 items-center gap-x-4">
                     <div className="h-40 w-40 bg-gray-300 mx-auto rounded-md" />
@@ -130,27 +131,27 @@ const Wishlist = () => {
       )}
 
       {status === "loaded" && (
-        <div className="w-full max-w-5xl mx-auto mt-10">
+        <div className="w-full max-w-5xl mx-auto mt-10 px-4 ">
           {books.results.length === 0 ? (
             <div className="flex justify-center items-center h-[70vh]">
               <p className="text-xl">Your wishlist is empty.</p>
             </div>
           ) : (
             <>
-              <table>
-                <thead className="w-full">
-                  <tr className="hidden md:table-row border-b *:pb-3">
+              <table className="w-full">
+                <thead className="hidden md:table-header-group">
+                  <tr className="border-b *:pb-2">
                     <th className="text-start">Book</th>
                     <th className="text-start w-1/6">Author</th>
                     <th className="text-start w-1/6">Languages</th>
                     <th className="text-start w-1/6">Action</th>
                   </tr>
                 </thead>
-                <tbody className=" md:border-b ">
+                <tbody className="space-y-4 md:space-y-0">
                   {books.results.map((book) => (
                     <tr
                       key={book.id}
-                      className="flex flex-col items-center justify-center border p-4 m-4 md:!border-x-0 md:p-0 md:m-0 md:table-row"
+                      className="flex flex-col items-center justify-center border p-4 md:!border-x-0 md:p-0 md:m-0 md:table-row"
                     >
                       <td className="md:grid grid-cols-3 items-center gap-x-4 group">
                         <img
@@ -205,41 +206,15 @@ const Wishlist = () => {
                             <path d="M19 6l-1.5 14.5a2 2 0 0 1-2 1.5H8.5a2 2 0 0 1-2-1.5L5 6"></path>
                             <path d="M10 11v6"></path>
                             <path d="M14 11v6"></path>
-                            <path d="M5 6l1-4h12l1 4"></path>
+                            <path d="M5 6l1-2a2 2 0 0 1 2-1h8a2 2 0 0 1 2 1l1 2"></path>
                           </svg>
+                          Delete
                         </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-
-              {books.results.length > 0 && (
-                <div className="flex justify-end gap-x-4 mt-2">
-                  <button
-                    className={`flex items-center justify-center gap-1 rounded-md py-1.5 transition-all px-5 ${
-                      books.previous
-                        ? "bg-[#1C4336]/[14%] text-[#1C4336] hover:bg-[#1C4336]/[24%]"
-                        : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    }`}
-                    onClick={() => setUrl(books.previous)}
-                    disabled={!books.previous}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className={`flex items-center justify-center gap-1 rounded-md py-1.5 transition-all px-5 ${
-                      books.next
-                        ? "bg-[#1C4336] text-white hover:opacity-80"
-                        : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    }`}
-                    onClick={() => setUrl(books.next)}
-                    disabled={!books.next}
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
             </>
           )}
         </div>

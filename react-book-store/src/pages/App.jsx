@@ -94,28 +94,29 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div className="bg-flight-banner-image bg-no-repeat bg-cover object-fill h-56 flex items-center justify-center">
-        <div className="mt-40">
+    <div className="overflow-hidden">
+      <div className="bg-flight-banner-image bg-no-repeat bg-cover object-fill h-60 flex items-center justify-center relative">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative mt-40 z-10 px-4 smd:px-8 lg:px-16">
           <h2 className="text-2xl font-bold mb-2 text-white">
-            Search for Books
+            Discover Your Next Favorite Book
           </h2>
           <p className="text-lg text-white mb-4">
-            Find books by name or publication year
+            Search by title or author, and filter by topic or bookshelves
           </p>
-          <div className="grid grid-cols-3 gap-4 shadow-md rounded-md bg-white p-8 min-w-[30vw] w-full">
+          <div className="md:grid grid-cols-3 gap-4 shadow-md rounded-md bg-white p-8">
             <div className="col-span-2">
               <label
                 htmlFor="search"
                 className="block text-gray-600 font-medium mb-2"
               >
-                Search by Book Title
+                Search by Book Title or Author Name
               </label>
               <input
                 type="text"
                 name="search"
                 id="search"
-                placeholder="Type your search words"
+                placeholder="Enter book title or author name"
                 className="border border-gray-200 rounded w-full p-2 focus:outline-none"
                 value={searchText}
                 onChange={(e) => onQueryChange(e.target.value)}
@@ -126,16 +127,16 @@ const App = () => {
                 htmlFor="filterBy"
                 className="block text-gray-600 font-medium mb-2"
               >
-                Filter by
+                Filter by Topic or Bookshelf
               </label>
               <select
-                className="cursor-pointer rounded-md border px-4 py-2 text-center text-gray-600"
+                className="cursor-pointer rounded-md border px-4 py-2 text-center text-gray-600 w-full"
                 name="filterBy"
                 id="filterBy"
                 value={filterValue}
                 onChange={onFilterChange}
               >
-                <option value="">Select a genre</option>
+                <option value="">Select a topic or bookshelf</option>
                 {dropdownData.map((data, i) => (
                   <option value={data.value} key={i}>
                     {data.label}
@@ -147,9 +148,9 @@ const App = () => {
         </div>
       </div>
 
-      <div className="my-40 max-w-6xl mx-auto">
+      <div className="py-40 max-w-6xl mx-auto px-4">
         {fetchStatus === "loading" && (
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {skeleton.map((i) => (
               <div key={i} className="space-y-3 group animate-pulse">
                 <div className="flex items-center justify-center rounded-md border border-[#324251]/30 bg-white p-4 h-[200px]">
@@ -175,7 +176,7 @@ const App = () => {
           <p className="text-center text-red-500">Error fetching books.</p>
         )}
         {fetchStatus === "success" && (
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {books?.results?.map((book) => (
               <div key={book.id} className="space-y-3 group">
                 <div className="flex items-center justify-center rounded-md border border-[#324251]/30 bg-white p-4 h-[200px]">
@@ -240,7 +241,7 @@ const App = () => {
                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
             onClick={() => setUrl(books.previous)}
-            disabled={!books.previous}
+            disabled={!books.previous || fetchStatus === "loading"}
           >
             Previous
           </button>
@@ -251,7 +252,7 @@ const App = () => {
                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
             onClick={() => setUrl(books.next)}
-            disabled={!books.next}
+            disabled={!books.next || fetchStatus === "loading"}
           >
             Next
           </button>
