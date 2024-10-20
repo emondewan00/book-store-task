@@ -7,7 +7,7 @@ const SearchAndFilter = ({
   onFilterChange,
 }) => {
   return (
-    <div className="bg-flight-banner-image bg-no-repeat bg-cover object-fill h-60 flex items-center justify-center relative">
+    <div className="bg-book-banner-image bg-no-repeat bg-cover object-fill h-60 flex items-center justify-center relative">
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative mt-40 z-10 px-4 smd:px-8 lg:px-16">
         <h2 className="text-2xl font-bold mb-2 text-white">

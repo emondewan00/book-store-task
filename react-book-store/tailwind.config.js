@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "flight-banner-image": "url('./library.jpg')",
+        "book-banner-image": "url('./library.jpg')",
       },
       colors: {
         primary: "#1C4336",
