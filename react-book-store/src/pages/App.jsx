@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import SearchAndFilter from "../components/home/SearchAndFilter";
 import Books from "../components/home/Books";
 
@@ -27,6 +26,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    let ignore = false;
     const getBooks = async () => {
       setFetchStatus("loading");
       let u = url;
@@ -39,14 +39,20 @@ const App = () => {
       try {
         const response = await fetch(u);
         const data = await response.json();
-        setBooks(data);
-        setFetchStatus("success");
+        if (!ignore) {
+          setBooks(data);
+          setFetchStatus("success");
+        }
       } catch (error) {
         console.error("Error fetching books:", error);
         setFetchStatus("error");
       }
     };
     getBooks();
+
+    return () => {
+      ignore = true;
+    };
   }, [url, searchText, filterValue]);
 
   const toggleWishlist = (id) => {

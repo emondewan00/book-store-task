@@ -20,6 +20,7 @@ const Wishlist = () => {
     const wishlistItems =
       JSON.parse(localStorage.getItem("wishlistItems")) || [];
     setStatus("loading");
+    let ignore = false;
 
     if (wishlistItems.length > 0) {
       const query = `${url}?ids=${wishlistItems.join(",")}`;
@@ -33,8 +34,10 @@ const Wishlist = () => {
           }
 
           const data = await response.json();
-          setBooks(data);
-          setStatus("loaded");
+          if (!ignore) {
+            setBooks(data);
+            setStatus("loaded");
+          }
         } catch (err) {
           setError(err.message);
           setStatus("error");
@@ -45,6 +48,10 @@ const Wishlist = () => {
     } else {
       setStatus("loaded");
     }
+
+    return () => {
+      ignore = true;
+    };
   }, [url]);
 
   const deleteBook = (id) => {
