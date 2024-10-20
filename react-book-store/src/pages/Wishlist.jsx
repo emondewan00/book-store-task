@@ -74,12 +74,12 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-gray-100 h-40 flex items-center justify-center">
-        <h1 className="text-2xl font-bold text-center text-gray-800">
+      <div className="bg-gray-100 h-56 flex items-center justify-center bg-flight-banner-image relative">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <h1 className="text-2xl font-bold text-center text-white relative z-40">
           Wishlist
         </h1>
       </div>
-
 
       {status === "loading" && (
         <div className="w-full max-w-5xl mx-auto mt-10 px-4">

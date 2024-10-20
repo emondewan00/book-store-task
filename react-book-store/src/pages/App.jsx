@@ -1,22 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-const skeleton = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const dropdownData = [
-  { label: "Science Fiction", value: "science-fiction" },
-  { label: "Children's Literature", value: "childrens-literature" },
-  { label: "Philosophy", value: "philosophy" },
-  { label: "Historical Fiction", value: "historical-fiction" },
-  { label: "Mystery", value: "mystery" },
-  { label: "Adventure", value: "adventure" },
-  { label: "Poetry", value: "poetry" },
-  { label: "Drama", value: "drama" },
-  { label: "Fantasy", value: "fantasy" },
-  { label: "Religion", value: "religion" },
-  { label: "Mythology", value: "mythology" },
-  { label: "Biography", value: "biography" },
-  { label: "Politics", value: "politics" },
-  { label: "Horror", value: "horror" },
-];
+import SearchAndFilter from "../components/home/SearchAndFilter";
+import Books from "../components/home/Books";
+
 const App = () => {
   const [url, setUrl] = useState("https://gutendex.com/books/?page=1");
   const [searchText, setSearchText] = useState("");
@@ -95,169 +81,20 @@ const App = () => {
 
   return (
     <div className="overflow-hidden">
-      <div className="bg-flight-banner-image bg-no-repeat bg-cover object-fill h-60 flex items-center justify-center relative">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative mt-40 z-10 px-4 smd:px-8 lg:px-16">
-          <h2 className="text-2xl font-bold mb-2 text-white">
-            Discover Your Next Favorite Book
-          </h2>
-          <p className="text-lg text-white mb-4">
-            Search by title or author, and filter by topic or bookshelves
-          </p>
-          <div className="md:grid grid-cols-3 gap-4 shadow-md rounded-md bg-white p-8">
-            <div className="col-span-2">
-              <label
-                htmlFor="search"
-                className="block text-gray-600 font-medium mb-2"
-              >
-                Search by Book Title or Author Name
-              </label>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                placeholder="Enter book title or author name"
-                className="border border-gray-200 rounded w-full p-2 focus:outline-none"
-                value={searchText}
-                onChange={(e) => onQueryChange(e.target.value)}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="filterBy"
-                className="block text-gray-600 font-medium mb-2"
-              >
-                Filter by Topic or Bookshelf
-              </label>
-              <select
-                className="cursor-pointer rounded-md border px-4 py-2 text-center text-gray-600 w-full"
-                name="filterBy"
-                id="filterBy"
-                value={filterValue}
-                onChange={onFilterChange}
-              >
-                <option value="">Select a topic or bookshelf</option>
-                {dropdownData.map((data, i) => (
-                  <option value={data.value} key={i}>
-                    {data.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SearchAndFilter
+        searchText={searchText}
+        onQueryChange={onQueryChange}
+        filterValue={filterValue}
+        onFilterChange={onFilterChange}
+      />
 
-      <div className="py-40 max-w-6xl mx-auto px-4">
-        {fetchStatus === "loading" && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {skeleton.map((i) => (
-              <div key={i} className="space-y-3 group animate-pulse">
-                <div className="flex items-center justify-center rounded-md border border-[#324251]/30 bg-white p-4 h-[200px]">
-                  <div className="h-full w-[144px] bg-gray-300 rounded-md" />
-                </div>
-                <div className="space-y-3">
-                  <div className="h-6 bg-gray-300 rounded-md lg:h-8" />
-                  <div className="h-4 bg-gray-300 rounded-md lg:h-5" />
-                  <div className="flex items-center justify-between">
-                    <div className="h-6 bg-gray-300 rounded-md lg:h-8 w-1/2" />
-                    <div className="h-4 bg-gray-300 rounded-md lg:h-5 w-1/4" />
-                  </div>
-                  <button className="flex items-center justify-center gap-1 rounded-md py-1.5 bg-gray-300 animate-pulse w-full">
-                    <div className="h-5 w-5 bg-gray-300 rounded-full" />
-                    <span className="h-4 bg-gray-300 rounded-md w-1/2" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        {fetchStatus === "error" && (
-          <p className="text-center text-red-500">Error fetching books.</p>
-        )}
-        {fetchStatus === "success" && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {books?.results?.map((book) => (
-              <div key={book.id} className="space-y-3 group">
-                <div className="flex items-center justify-center rounded-md border border-[#324251]/30 bg-white p-4 h-[200px]">
-                  <img
-                    className="h-full object-contain max-w-[144px] hover:scale-105 duration-150 delay-75 ease-in-out"
-                    src={book.formats["image/jpeg"]}
-                    alt={book.title}
-                  />
-                </div>
-                <div className="space-y-3">
-                  <Link
-                    to={`/book/${book.id}`}
-                    className="text-lg font-bold lg:text-xl line-clamp-1 group-hover:text-blue-500"
-                  >
-                    {book.title}
-                  </Link>
-                  <p className="text-xs lg:text-sm line-clamp-1">
-                    By : <span>{book?.authors[0]?.name}</span>
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-semibold">
-                      Type: {book.media_type}
-                    </h4>
-                    <p className="text-xs lg:text-sm">Id: {book.id}</p>
-                  </div>
-                  <button
-                    onClick={() => toggleWishlist(book.id)}
-                    className={`flex items-center justify-center gap-1 rounded-md py-1.5 transition-all w-full ${
-                      wishlistIds.includes(book.id)
-                        ? "bg-[#DC2954]/[14%] text-[#DC2954] hover:bg-[#DC2954]/[24%]"
-                        : "bg-[#1C4336]/[14%] text-[#1C4336] hover:bg-[#1C4336]/[24%]"
-                    }`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill={wishlistIds.includes(book.id) ? "#DC2954" : "none"}
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="h-5 w-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                      />
-                    </svg>
-                    {wishlistIds.includes(book.id)
-                      ? "In wishlist"
-                      : "Add to Wishlist"}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex justify-end gap-x-4 mt-2">
-          <button
-            className={`flex items-center justify-center gap-1 rounded-md py-1.5 transition-all px-5 ${
-              books.previous
-                ? "bg-[#1C4336]/[14%] text-[#1C4336] hover:bg-[#1C4336]/[24%]"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
-            }`}
-            onClick={() => setUrl(books.previous)}
-            disabled={!books.previous || fetchStatus === "loading"}
-          >
-            Previous
-          </button>
-          <button
-            className={`flex items-center justify-center gap-1 rounded-md py-1.5 transition-all px-5 ${
-              books.next
-                ? "bg-[#1C4336] text-white hover:opacity-80"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
-            }`}
-            onClick={() => setUrl(books.next)}
-            disabled={!books.next || fetchStatus === "loading"}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <Books
+        books={books}
+        fetchStatus={fetchStatus}
+        toggleWishlist={toggleWishlist}
+        wishlistIds={wishlistIds}
+        setUrl={setUrl}
+      />
     </div>
   );
 };
